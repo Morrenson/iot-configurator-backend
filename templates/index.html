@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>IoT Configurator</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}" />
+</head>
+<body>
+    <h1>IoT Configurator</h1>
+    <nav><a href="/create">Create New Model</a></nav>
+    <section>
+        <h2>Device Models</h2>
+        <ul id="model-list"></ul>
+    </section>
+    <script src="{{ url_for('static', path='js/scripts.js') }}"></script>
+</body>
+</html>
