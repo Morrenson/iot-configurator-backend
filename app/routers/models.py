@@ -1,20 +1,37 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from psycopg2.extensions import connection as _Connection
 from .. import schemas, crud, database
 
 router = APIRouter(prefix="/models", tags=["models"])
 
 @router.post("/", response_model=schemas.DeviceModelRead)
-def create_model(model: schemas.DeviceModelCreate, db: Session = Depends(database.get_db)):
+def create_model(
+    model: schemas.DeviceModelCreate,
+    db: _Connection = Depends(database.get_db),
+):
+    """
+    Создаёт новую модель устройства и возвращает её данные.
+    """
     return crud.create_device_model(db, model)
 
 @router.get("/", response_model=list[schemas.DeviceModelRead])
-def list_models(db: Session = Depends(database.get_db)):
-    return crud.get_device_models(db)
+def list_models(
+    db: _Connection = Depends(database.get_db),
+):
+    """
+    Возвращает список всех моделей устройств.
+    """
+    return crud.list_device_models(db)
 
 @router.get("/{model_id}", response_model=schemas.DeviceModelRead)
-def read_model(model_id: str, db: Session = Depends(database.get_db)):
-    db_model = crud.get_device_model(db, model_id)
-    if not db_model:
+def read_model(
+    model_id: str,
+    db: _Connection = Depends(database.get_db),
+):
+    """
+    Возвращает одну модель по её ID или 404, если не найдена.
+    """
+    rec = crud.get_device_model(db, model_id)
+    if not rec:
         raise HTTPException(status_code=404, detail="Model not found")
-    return db_model
+    return rec

@@ -1,41 +1,32 @@
+# app/database.py
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import psycopg2
+from psycopg2 import pool
 
-# Собираем параметры из переменных окружения (или берём значения по-умолчанию)
+# Читаем переменные окружения
 DB_HOSTS = os.getenv("DB_HOSTS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_SSLMODE = os.getenv("DB_SSLMODE")
-DB_TARGET_SESSION_ATTRS = os.getenv("DB_TARGET_SESSION_ATTRS")
+DB_SSLMODE = os.getenv("DB_SSLMODE", "disable")
 
-# Опционально, если нужен sslrootcert, укажите путь к скачанному Yandex Cloud CA:
-# DB_SSLROOTCERT = os.getenv("DB_SSLROOTCERT", "/path/to/yandex-ca.pem")
-
-# Формируем URL для SQLAlchemy (подаём host как список через запятую)
-# Если задана переменная окружения DATABASE_URL — она имеет приоритет
-default_url = (
-    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@"
-    f"{DB_HOSTS}:{DB_PORT}/{DB_NAME}"
-    f"?sslmode={DB_SSLMODE}"
-    f"&target_session_attrs={DB_TARGET_SESSION_ATTRS}"
-    # f"&sslrootcert={DB_SSLROOTCERT}"  # раскомментируйте, если используете sslrootcert
+# Формируем DSN для psycopg2
+DSN = (
+    f"host={DB_HOSTS} port={DB_PORT} dbname={DB_NAME} "
+    f"user={DB_USER} password={DB_PASSWORD} "
+    f"sslmode={DB_SSLMODE} target_session_attrs=read-write"
 )
-DATABASE_URL = os.getenv("DATABASE_URL", default_url)
 
-# Создаём движок и сессию
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Создаём пул подключений
+pg_pool = pool.SimpleConnectionPool(1, 10, dsn=DSN)
 
 def get_db():
     """
-    Получает сессию SQLAlchemy для работы с БД.
-    Используется как dependency в FastAPI.
+    FastAPI dependency: даёт подключение из пула и закрывает после использования.
     """
-    db = SessionLocal()
+    conn = pg_pool.getconn()
     try:
-        yield db
+        yield conn
     finally:
-        db.close()
+        pg_pool.putconn(conn)

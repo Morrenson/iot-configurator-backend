@@ -1,21 +1,13 @@
-from sqlalchemy import Column, String, JSON, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
-import uuid
+from fastapi import APIRouter, Depends
+from .. import schemas, crud
+from ..database import get_db
 
-Base = declarative_base()
+router = APIRouter(prefix="/models", tags=["models"])
 
-class DeviceModel(Base):
-    __tablename__ = "device_models"
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    name = Column(String, index=True, nullable=False)
-    description = Column(String, nullable=True)
-    configuration = Column(JSON, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+@router.post("/", response_model=schemas.DeviceModelRead)
+def create_model(model: schemas.DeviceModelCreate, conn = Depends(get_db)):
+    return crud.create_device_model(conn, model)
 
-class Telemetry(Base):
-    __tablename__ = "telemetry"
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    device_id = Column(String, nullable=False, index=True)
-    payload = Column(JSON, nullable=False)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+@router.get("/", response_model=list[schemas.DeviceModelRead])
+def list_models(conn = Depends(get_db)):
+    return crud.list_device_models(conn)
