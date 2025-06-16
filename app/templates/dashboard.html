@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard – IoT Device Designer{% endblock %}
+{% block content %}
+  <section class="dashboard__hero container">
+    <h1>IoT Device Dashboard</h1>
+    <p>Manage your IoT devices with parametric modeling and cloud integration</p>
+    <a href="/devices/new" class="btn btn--primary">+ Add New Device</a>
+  </section>
+
+  {% if devices %}
+    <div class="cards container">
+      {% for d in devices %}
+        <div class="card">
+          <div class="card__header">
+            <span class="card__icon">💻</span>
+            <time class="card__date">{{ d.created_at.strftime('%d.%m.%Y') }}</time>
+          </div>
+          <div class="card__body">
+            <h3>{{ d.name }}</h3>
+            <p>{{ d.description or 'No description' }}</p>
+            <span class="badge">Configured</span>
+          </div>
+          <div class="card__footer">
+            <a href="/devices/{{ d.id }}" class="btn btn--secondary">View</a>
+            <a href="/devices/{{ d.id }}/delete" class="btn btn--danger">Delete</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="container" style="text-align:center; margin-top:2rem; color:var(--color-muted);">
+      No devices yet<br>
+      <a href="/devices/new" class="btn btn--primary" style="margin-top:1rem;">Add Your First Device</a>
+    </p>
+  {% endif %}
+{% endblock %}

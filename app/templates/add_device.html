@@ -1,0 +1,55 @@
+{# app/templates/add_device.html #}
+{% extends 'base.html' %}
+{% block title %}
+  {% if edit %}Edit Device{% else %}Add New Device{% endif %}
+{% endblock %}
+{% block content %}
+<div class="container">
+  <a href="/" class="btn btn--secondary btn--inline">&larr; Back</a>
+  <h2>{% if edit %}Edit Device{% else %}Add New Device{% endif %}</h2>
+
+  <form method="post" action="{% if edit %}/devices/{{ device_id }}/edit{% else %}/devices/new{% endif %}" class="form-card">
+    {% if error %}
+      <div class="form-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="name">Device Name *</label>
+        <input type="text" id="name" name="name" value="{{ name }}" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" value="{{ description }}">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:var(--spacing);">
+      <label for="config">Device Configuration (JSON) *</label>
+      <textarea
+        id="config"
+        name="config"
+        required
+        placeholder="{&#10;  &quot;deviceType&quot;: &quot;sensor&quot;,&#10;  &quot;parameters&quot;: {&#10;    &quot;sensorType&quot;: &quot;temperature&quot;,&#10;    &quot;range&quot;: {&#10;      &quot;min&quot;: -40,&#10;      &quot;max&quot;: 125&#10;    },&#10;    &quot;accuracy&quot;: 0.1,&#10;    &quot;powerConsumption&quot;: &quot;3.3V @ 1mA&quot;&#10;  },&#10;  &quot;connectivity&quot;: {&#10;    &quot;protocol&quot;: &quot;WiFi&quot;,&#10;    &quot;frequency&quot;: &quot;2.4GHz&quot;,&#10;    &quot;encryption&quot;: &quot;WPA2&quot;&#10;  },&#10;  &quot;cloudIntegration&quot;: {&#10;    &quot;platform&quot;: &quot;AWS IoT Core&quot;,&#10;    &quot;dataFormat&quot;: &quot;JSON&quot;,&#10;    &quot;updateInterval&quot;: 30&#10;  }&#10;}"
+        style="font-family: monospace; white-space: pre-wrap; min-height: 200px;"
+      >{{ config }}</textarea>
+    </div>
+
+    <div class="json-guidelines">
+      <ul>
+        <li>Include device type, parameters, and connectivity settings</li>
+        <li>Specify cloud integration platform and data format</li>
+        <li>Define parametric modeling constraints and ranges</li>
+        <li>Ensure valid JSON syntax with proper nesting</li>
+      </ul>
+    </div>
+
+    <div class="form-actions">
+      <a href="/" class="btn btn--secondary btn--inline">Cancel</a>
+      <button type="submit" class="btn btn--primary">
+        {% if edit %}Update Device{% else %}Create Device{% endif %}
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

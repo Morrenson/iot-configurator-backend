@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}{{ device.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:var(--spacing);">
+    <div>
+      <a href="/" class="btn btn--secondary">&larr; Back</a>
+      <h2 style="display:inline-block; margin-left:var(--spacing)">{{ device.name }}</h2>
+      <p style="color:var(--color-muted); display:inline-block; margin-left:var(--spacing)">
+        Created on {{ device.created_at.strftime('%d.%m.%Y') }}
+      </p>
+    </div>
+    <div>
+      <a href="/devices/{{ device.id }}/edit" class="btn btn--primary">Edit Device</a>
+      <a href="/devices/{{ device.id }}/delete" class="btn btn--danger">Delete</a>
+    </div>
+  </div>
+
+  <!-- Device Info -->
+  <div class="form-card">
+    <h3>Device Information</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Device Name</label>
+        <input type="text" readonly value="{{ device.name }}">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" readonly value="{{ device.description }}">
+      </div>
+    </div>
+  </div>
+
+  <!-- Configuration blocks -->
+  <div class="form-card" style="margin-top:var(--spacing);">
+    <h3>
+      Device Configuration
+      <span style="float:right; color:var(--color-muted); font-size:0.875rem;">JSON Format</span>
+    </h3>
+
+    <div class="config-block config-block--type">
+      <strong>Device Type</strong>
+      <p>{{ device.configuration.deviceType }}</p>
+    </div>
+
+    <div class="config-block config-block--parameters">
+      <strong>Parameters</strong>
+      <p>
+        Sensor Type: {{ device.configuration.parameters.sensorType }}<br>
+        Range: {{ device.configuration.parameters.range | tojson }}<br>
+        Accuracy: {{ device.configuration.parameters.accuracy }}<br>
+        Power Consumption: {{ device.configuration.parameters.powerConsumption }}
+      </p>
+    </div>
+
+    <div class="config-block config-block--connectivity">
+      <strong>Connectivity</strong>
+      <p>
+        Protocol: {{ device.configuration.connectivity.protocol }}<br>
+        Frequency: {{ device.configuration.connectivity.frequency }}<br>
+        Encryption: {{ device.configuration.connectivity.encryption }}
+      </p>
+    </div>
+
+    <div class="config-block config-block--cloud">
+      <strong>Cloud Integration</strong>
+      <p>
+        Platform: {{ device.configuration.cloudIntegration.platform }}<br>
+        Data Format: {{ device.configuration.cloudIntegration.dataFormat }}<br>
+        Update Interval: {{ device.configuration.cloudIntegration.updateInterval }}
+      </p>
+    </div>
+
+    <button type="button" class="btn btn--secondary" onclick="toggleRaw()">View Raw Configuration</button>
+    <pre id="raw-config" style="display:none; margin-top:var(--spacing);">{{ device.configuration | tojson(indent=2) }}</pre>
+  </div>
+</div>
+
+<script>
+function toggleRaw(){
+  const pre = document.getElementById('raw-config');
+  pre.style.display = pre.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

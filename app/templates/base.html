@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}IoT Device Designer{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="header container">
+    <a href="/" class="header__title">IoT Device Designer</a>
+    <!-- Кнопка переключения темы -->
+    <button id="theme-toggle" class="btn btn--secondary" aria-label="Toggle theme">🌙</button>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    (function(){
+      const btn     = document.getElementById('theme-toggle');
+      const root    = document.documentElement;
+      const STORAGE = 'theme';
+
+      function setTheme(t){
+        root.setAttribute('data-theme', t);
+        localStorage.setItem(STORAGE, t);
+        btn.textContent = t === 'dark' ? '☀️' : '🌙';
+      }
+
+      btn.addEventListener('click', ()=>{
+        const cur = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        setTheme(cur === 'dark' ? 'light' : 'dark');
+      });
+
+      // При загрузке
+      const saved = localStorage.getItem(STORAGE);
+      if (saved) {
+        setTheme(saved);
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    })();
+  </script>
+</body>
+</html>

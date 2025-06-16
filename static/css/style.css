@@ -1,0 +1,303 @@
+/* ------------------------- */
+/* Растягиваем фон на весь экран */
+/* ------------------------- */
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+}
+
+/* main.css — базовые переменные и ресет */
+:root {
+  --color-primary:       #1e3a8a;
+  --color-accent:        #2563eb;
+  --color-bg:            #f9fafb;
+  --color-card-bg:       #ffffff;
+  --color-text:          #111827;
+  --color-muted:         #6b7280;
+  --color-success:       #10b981;
+  --color-danger:        #ef4444;
+  --color-secondary:     #4b5563; /* для View */
+  --btn-text-color:      #ffffff;
+  --border-radius:       8px;
+  --spacing:             16px;
+  --max-width:           1200px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:        #1f2937;
+    --color-card-bg:   #374151;
+    --color-text:      #f9fafb;
+    --color-muted:     #9ca3af;
+    --color-secondary: #6b7280;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* контейнер по центру с резиновой вёрсткой */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+}
+
+/* хедера */
+.header {
+  display: flex;
+  justify-content: center;     /* центрируем заголовок */
+  align-items: center;
+  padding: var(--spacing) 0;
+  background: var(--color-card-bg);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header__title {
+  margin: 0 auto;
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Dashboard */
+.dashboard__hero {
+  text-align: center;
+  padding: calc(var(--spacing)*2) 0;
+}
+
+.dashboard__hero h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__hero p {
+  color: var(--color-muted);
+  margin-bottom: var(--spacing);
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  color: var(--btn-text-color) !important;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Кнопки */
+.btn--primary {
+  background: var(--color-accent);
+}
+
+.btn--secondary {
+  background: var(--color-secondary);
+}
+
+.btn--danger {
+  background: var(--color-danger);
+}
+
+/* Карточки устройств */
+.cards {
+  display: grid;
+  gap: var(--spacing);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin-top: var(--spacing);
+}
+
+.card {
+  background: var(--color-card-bg);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card__icon {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.card__date {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.card__body h3 {
+  margin: var(--spacing) 0 0.25rem;
+  font-size: 1.125rem;
+}
+
+.card__body p {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius);
+  background: var(--color-success);
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.card__footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Форма добавления / редактирования */
+.form-card {
+  background: var(--color-card-bg);
+  padding: var(--spacing);
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-top: var(--spacing);
+}
+
+.form-card h2 {
+  margin-bottom: var(--spacing);
+}
+
+.form-grid {
+  display: grid;
+  gap: var(--spacing);
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-actions {
+  text-align: right;
+  margin-top: var(--spacing);
+}
+
+/* Страница просмотра устройства — цветные блоки */
+.config-block {
+  padding: var(--spacing);
+  border-radius: var(--border-radius);
+  margin-top: var(--spacing);
+}
+
+.config-block--type {
+  background: #e0f2fe;
+  color: #111827;
+}
+
+.config-block--parameters {
+  background: #dcfce7;
+  color: #111827;
+}
+
+.config-block--connectivity {
+  background: #f3e8ff;
+  color: #111827;
+}
+
+.config-block--cloud {
+  background: #ffedd5;
+  color: #111827;
+}
+/* ------------------------- */
+/* Более контрастный header */
+/* ------------------------- */
+@media (prefers-color-scheme: dark) {
+  .header {
+    /* вместо var(--color-card-bg) используем серый и делаем рамку чуть светлее */
+    background: var(--color-secondary);
+    border-bottom: 1px solid var(--color-muted);
+  }
+}
+/* -------------------------------------------------- */
+/*  Поддержка ручного переключения тем через data-theme */
+/* -------------------------------------------------- */
+
+/* Тёмная тема по data-атрибуту */
+
+html[data-theme="dark"] {
+  --color-bg:            #111827;  /* глубокий почти-чёрный фон */
+  --color-card-bg:       #1f2937;  /* чуть светлее для карточек/форм */
+  --color-text:          #e5e7eb;  /* светло-серый текст */
+  --color-muted:         #9ca3af;  /* приглушённый серый */
+  --color-primary:       #3b82f6;  /* чуть более яркий акцентный синий */
+  --color-secondary:     #64748b;  /* для кнопки View — заметный, но не режет глаз */
+  --color-accent:        #2563eb;  /* основной акцент */
+  --color-success:       #10b981;  /* зелёный для статусов */
+  --color-danger:        #ef4444;  /* красный для удаления */
+  --btn-text-color:      #ffffff;  /* текст на кнопках */
+}
+
+/* fallback — привязываемся к системной «тёмной» */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --color-bg:            #111827;
+    --color-card-bg:       #1f2937;
+    --color-text:          #e5e7eb;
+    --color-muted:         #9ca3af;
+    --color-primary:       #3b82f6;
+    --color-secondary:     #64748b;
+    --color-accent:        #2563eb;
+    --color-success:       #10b981;
+    --color-danger:        #ef4444;
+    --btn-text-color:      #ffffff;
+  }
+}
+
